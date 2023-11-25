@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sliding Puzzle Game</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.4/brython.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.4/brython_stdlib.js"></script>
+    <style>
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Adjust based on puzzle size */
+            grid-gap: 5px;
+            max-width: 400px;
+            margin: auto;
+        }
+        .puzzle-tile {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            background-color: skyblue;
+            border: 1px solid #333;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body onload="brython()">
+
+<div id="puzzle-container" class="puzzle-grid">
+    <!-- Puzzle tiles will be generated here -->
+</div>
+
+<script type="text/python">
+    from browser import document
+    import random
+
+    # State to keep track of the tiles
+    puzzle_size = 4
+    puzzle_state = [[] for _ in range(puzzle_size)]
+
+    def create_tile(number, row, col):
+        tile = document.createElement('div')
+        tile.text = str(number) if number else ''
+        tile.className = 'puzzle-tile'
+        tile.bind('click', on_tile_click)
+        position = col * puzzle_size + row
+        tile.id = f'tile-{position}'
+        puzzle_state[row].append(number)
+        return tile
+
+    def on_tile_click(event):
+        # Add logic for moving the tile
+        print(f'Tile clicked: {event.target.text}')
+        # Update puzzle_state as needed
+
+    def generate_puzzle():
+        puzzle_container = document['puzzle-container']
+        numbers = list(range(1, puzzle_size**2))
+        random.shuffle(numbers)
+    
+        for index, number in enumerate(numbers):
+            row = index // puzzle_size  # Calculate row
+            col = index % puzzle_size  # Calculate column
+            tile = create_tile(number, row, col)
+            puzzle_container <= tile
+
+    generate_puzzle()
+    print(puzzle_state)
+</script>
+
+</body>
+</html>
