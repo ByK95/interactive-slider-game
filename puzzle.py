@@ -7,6 +7,12 @@ puzzle_state = [[] for _ in range(puzzle_size)]
 
 move_count = 0
 
+def get_puzzle_state():
+    return puzzle_state
+
+def get_puzzle_size():
+    return puzzle_size
+
 def increment_move_count():
     global move_count
     move_count += 1
@@ -17,16 +23,18 @@ def reset_move_count():
     move_count = 0
     document['moves'].text = str(move_count)
 
-def find_possible_movements(puzzle):
-    # Find the position of the empty tile (0)
+def find_empty_tile_position(puzzle):
     for i, row in enumerate(puzzle):
         for j, value in enumerate(row):
             if value == 0:
-                empty_tile_position = (i, j)
-                break
+                return (i, j)
+    return None
+
+def find_possible_movements(puzzle):
+    # Find the position of the empty tile (0)
 
     movements = []
-    x, y = empty_tile_position
+    x, y = find_empty_tile_position(puzzle)
     puzzle_size = len(puzzle)
 
     # Possible moves: above, below, left, right
@@ -37,6 +45,32 @@ def find_possible_movements(puzzle):
             movements.append(puzzle[move_x][move_y])
 
     return movements
+
+def swap_and_reconstruct(puzzle, element1, element2):
+    """
+    Flattens the puzzle, swaps two elements, and reconstructs it back to 2D.
+
+    :param puzzle: 2D list representing the puzzle.
+    :param element1: First element to swap.
+    :param element2: Second element to swap.
+    :return: New puzzle with elements swapped.
+    """
+    size = len(puzzle)
+    flat_puzzle = [item for row in puzzle for item in row]
+
+    # Find indices of the elements
+    try:
+        index1 = flat_puzzle.index(element1)
+        index2 = flat_puzzle.index(element2)
+    except ValueError:
+        return "One or both elements not found in the puzzle"
+
+    # Swap the elements
+    flat_puzzle[index1], flat_puzzle[index2] = flat_puzzle[index2], flat_puzzle[index1]
+
+    # Reconstruct the puzzle back to 2D
+    return flat_puzzle
+
 
 def create_tile(number, row, col):
     tile = document.createElement('div')
@@ -85,13 +119,6 @@ def move_tile(clicked_tile):
     # Set a timeout to update the state and UI after the animation completes
     window.setTimeout(update_state, 200) 
 
-def find_empty_tile_position(puzzle):
-    for i, row in enumerate(puzzle):
-        for j, value in enumerate(row):
-            if value == 0:
-                return (i, j)
-    return None
-
 def update_puzzle_ui():
     for row in range(puzzle_size):
         for col in range(puzzle_size):
@@ -119,9 +146,9 @@ def run_code(event):
     editor_content = window.editor.getValue()
     try:
         response = exec(editor_content, globals())
+        document["console"].value = str(response)
     except Exception as e:
         document["console"].value = str(e)
-    document["console"].value = str(response)
 
 document["run"].bind("click", run_code)
 
