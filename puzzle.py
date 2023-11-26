@@ -132,6 +132,8 @@ def update_puzzle_ui():
 
 def generate_puzzle():
     puzzle_container = document['puzzle-container']
+    puzzle_container.clear()  # Clear existing tiles
+
     numbers = list(range(1, puzzle_size**2))
     random.shuffle(numbers)
     numbers += [0]
@@ -149,6 +151,34 @@ def run_code(event):
         document["console"].value = str(response)
     except Exception as e:
         document["console"].value = str(e)
+
+def update_puzzle_size(event):
+    global puzzle_size, puzzle_state
+
+    puzzle_size = int(document['puzzle-size-selector'].value)
+    puzzle_state = [[] for _ in range(puzzle_size)]
+    reset_move_count()
+    generate_puzzle()
+
+    # Update the grid layout
+    puzzle_grid = document['puzzle-container']
+    puzzle_grid.style.gridTemplateColumns = ' '.join(['1fr' for _ in range(puzzle_size)])
+
+    # Dynamically adjust tile size and font
+    base_tile_size = 100  # Base size for 4x4 puzzle
+    base_font_size = 40  # Base font size for 4x4 puzzle
+    scale_factor = 4 / puzzle_size  # Adjust according to the base size
+
+    tile_size = base_tile_size * scale_factor
+    font_size = base_font_size * scale_factor
+
+    for tile in document.select('.puzzle-tile'):
+        tile.style.height = f'{tile_size}px'
+        tile.style.fontSize = f'{font_size}px'
+
+
+# Bind update_puzzle_size to the dropdown's change event
+document['puzzle-size-selector'].bind('change', update_puzzle_size)
 
 document["run"].bind("click", run_code)
 

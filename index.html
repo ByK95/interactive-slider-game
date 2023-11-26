@@ -11,7 +11,7 @@
     <style>
         .puzzle-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Adjust based on puzzle size */
+            grid-template-columns: repeat(4, 1fr);
             grid-gap: 5px;
             max-width: 400px;
             margin: auto;
@@ -57,6 +57,12 @@
       <td id="separator"></td>
       <td id="right">
         <div id="move-counter">Moves: <span id="moves">0</span></div>
+        <select id="puzzle-size-selector">
+            <option value="3">3x3</option>
+            <option value="4" selected>4x4</option>
+            <option value="5">5x5</option>
+            <!-- Add more sizes as needed -->
+        </select>
         <div id="puzzle-container" class="puzzle-grid">
             <!-- Puzzle tiles will be generated here -->
         </div>
