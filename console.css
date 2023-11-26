@@ -1,0 +1,40 @@
+html, body {
+   height: 100%; /* Ensure the root elements take up the full viewport height */
+   margin: 0; /* Remove default margins */
+   padding: 0; /* Remove default padding */
+}
+
+#container {
+   width: 90%;
+   height: 80vh; /* Use viewport height to define a height relative to the viewport */
+   position: relative;
+   margin: 50px auto; /* Add some top margin or as needed */
+}
+
+#left, #separator, #right {
+   float: left; /* Float the containers to have them side by side */
+   height: 100%;
+}
+
+#left, #right {
+   width: 49%;
+}
+
+#separator {
+   width: 1%;
+}
+
+#editor {
+   height: 500px; /* Provide a fixed height or use calc(100% - some_value) if you need to subtract some pixels */
+}
+
+#console {
+   height: 200px; /* Fixed height for console or use percentage as needed */
+   font-size: 12px;
+   font-family: Consolas,"Courier New";
+   box-sizing: border-box; /* Apply box-sizing to include padding and borders in the element's total width and height */
+}
+
+.ace_cursor {
+   animation: none!important
+}

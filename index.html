@@ -4,6 +4,10 @@
     <title>Sliding Puzzle Game</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.4/brython.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.4/brython_stdlib.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ace.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ext-language_tools.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/mode-python.min.js"></script>
+    <link rel="stylesheet" href="console.css">
     <style>
         .puzzle-grid {
             display: grid;
@@ -34,9 +38,36 @@
 </head>
 <body onload="brython()">
 
-<div id="puzzle-container" class="puzzle-grid">
-    <!-- Puzzle tiles will be generated here -->
-</div>
+
+
+<table id="container">
+    <tr>
+      <td>
+          <button id="run"> ▶ Run</button>
+          <button id="show_console">Python</button>
+          <button id="show_js">Javascript</button>
+          <button id="share_code">Share code</button>
+      </td>
+    </tr>
+  
+    <tr>
+      <td id="left">
+        <div id="editor" style="width:100%;"></div>
+      </td>
+      <td id="separator"></td>
+      <td id="right">
+        <!-- <textarea id="console" autocomplete="off"></textarea> -->
+        <div id="puzzle-container" class="puzzle-grid">
+            <!-- Puzzle tiles will be generated here -->
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+        <td><textarea id="console" autocomplete="off"></textarea></td>
+    </tr>
+
+  </table>
 
 <script type="text/python">
     from browser import document, window
@@ -141,11 +172,28 @@
             col = index % puzzle_size  # Calculate column
             tile = create_tile(number, row, col)
             puzzle_container <= tile
+    
+    def run_code(event):
+        editor_content = window.editor.getValue()
+        try:
+            response = exec(editor_content, globals())
+        except Exception as e:
+            document["console"].value = str(e)
+        document["console"].value = str(response)
+
+    document["run"].bind("click", run_code)
 
     generate_puzzle()
     print(puzzle_state)
     movements = find_possible_movements(puzzle_state)
     print(movements)
+    
+</script>
+<script>
+    var editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/python");
+    editor.setOption("scrollPastEnd", false);
+    editor.resize();
 </script>
 
 </body>
