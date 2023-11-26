@@ -155,13 +155,17 @@ def generate_puzzle():
     movements = find_possible_movements(puzzle_state)
     print(movements)
 
+def print_to_console(text):
+    document["console"].value = text
+
 def run_code(event):
     editor_content = window.editor.getValue()
     try:
         response = exec(editor_content, globals())
-        document["console"].value = str(response)
+        if response:
+            print_to_console(str(response))
     except Exception as e:
-        document["console"].value = str(e)
+        print_to_console(str(e))
 
 def update_puzzle_size(event):
     global puzzle_size, puzzle_state
