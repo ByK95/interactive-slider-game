@@ -1,9 +1,11 @@
+from copy import copy
 from browser import document, window
 import random
 
 # State to keep track of the tiles
 puzzle_size = 4
 puzzle_state = [[] for _ in range(puzzle_size)]
+goal_state = []
 
 move_count = 0
 
@@ -12,6 +14,9 @@ def get_puzzle_state():
 
 def get_puzzle_size():
     return puzzle_size
+
+def get_goal_state():
+    return goal_state
 
 def increment_move_count():
     global move_count
@@ -131,10 +136,12 @@ def update_puzzle_ui():
                 tile.classList.remove('empty')
 
 def generate_puzzle():
+    global goal_state
     puzzle_container = document['puzzle-container']
     puzzle_container.clear()  # Clear existing tiles
 
     numbers = list(range(1, puzzle_size**2))
+    goal_state = copy(numbers) + [0]
     random.shuffle(numbers)
     numbers += [0]
 
@@ -143,6 +150,10 @@ def generate_puzzle():
         col = index % puzzle_size
         tile = create_tile(number, row, col)
         puzzle_container <= tile
+    
+    print(puzzle_state)
+    movements = find_possible_movements(puzzle_state)
+    print(movements)
 
 def run_code(event):
     editor_content = window.editor.getValue()
@@ -181,8 +192,4 @@ def update_puzzle_size(event):
 document['puzzle-size-selector'].bind('change', update_puzzle_size)
 
 document["run"].bind("click", run_code)
-
 generate_puzzle()
-print(puzzle_state)
-movements = find_possible_movements(puzzle_state)
-print(movements)
